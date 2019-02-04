@@ -5,6 +5,7 @@ const express = require('express');
 const mongoose = require("mongoose");
 const jsonParser = require("body-parser").json;
 const morgan = require('morgan');
+const cors = require("cors");
 const { User } = require("./models");
 
 // variable to enable global error logging
@@ -29,6 +30,9 @@ db.once("open", () => {
 
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
+
+// Enable cors usage for all cors requets
+app.use(cors());
 
 ////////  API routes  ///////// 
 
