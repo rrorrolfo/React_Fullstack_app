@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import SingleCourse from "./SingleCourse";
 import axios from "axios";
 
+// Root route which displays all the available courses
+
 class Courses extends Component {
 
     state = {
@@ -20,9 +22,10 @@ class Courses extends Component {
         .catch(error => console.log("Error fetching and parsing data"));
     }
 
+    //displays all the existing courses
     displayCourses () {
         const courses = this.state.courses
-        const coursesToDisplay = courses.map( course => <SingleCourse title={course.title} key={course.id}/>);
+        const coursesToDisplay = courses.map( course => <SingleCourse title={course.title} courseID={course.id} key={course.id}/>);
 
         return coursesToDisplay;
     }
