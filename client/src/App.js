@@ -21,9 +21,9 @@ class App extends Component {
         <div>
           <Header />
           <Route exact path="/" render={ () => <Courses /> }/>
-          <Route path="/courses/create" render={ () => <CreateCourse /> }/>
-          <Route path="/courses/:id/update" render={ () => <UpdateCourse /> }/>
           <Route path="/courses/:id" render={ () => <CourseDetails /> }/>
+          <Route path="/courses/create" render={ () => <CreateCourse /> }/>
+          <Route path="/courses/:id/update" render={ (props) => <UpdateCourse {...props}/> }/>
           <Route path="/signin" render={ () => <UserSignIn /> }/>
           <Route path="/signup" render={ () => <UserSignUp /> }/>
           {/*<Route path="/signout" render={ () => <UserSignOut /> }/>*/}

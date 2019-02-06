@@ -1,21 +1,26 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { withRouter } from "react-router";
 
-// This component renders the details of a selected course
-// Need to transform required materials to a list
+// This component renders the details of Link selected course
+// Need to transform required materials to Link list
 
 class CourseDetails extends Component {
 
-    state = {
-        course: ""
-    }
+  state = {
+    course: ""
+  };
 
     componentDidMount() {
+
+        const courseToDisplay = this.props.match.params.id;
+
          // Fetches course details from DB
-         axios.get('http://localhost:5000/api/courses/57029ed4795118be119cc440')
+         axios.get(`http://localhost:5000/api/courses/${courseToDisplay}`)
          .then(response => {
              this.setState( {course: response.data} )
-             console.log(response.data)})
+             console.log(this.state.course)})
          .catch(error => console.log("Error fetching and parsing data"));
     }
 
@@ -25,6 +30,19 @@ class CourseDetails extends Component {
 
     return(
         <div className="bounds course--detail">
+
+          <div className="actions--bar">
+            <div className="bounds">
+              <div className="grid-100">
+                <span>
+                  <Link className="button" to={`/courses/${fetchedCourse._id}/update`}>Update Course</Link>
+                  <Link className="button" to="/">Delete Course</Link>
+                </span>
+                <Link className="button button-secondary" to="/">Return to List</Link>
+              </div>
+            </div>
+          </div>
+
           <div className="grid-66">
             <div className="course--header">
               <h4 className="course--label">Course</h4>
@@ -66,4 +84,4 @@ class CourseDetails extends Component {
 
 }
 
-export default CourseDetails;
+export default withRouter(CourseDetails);
