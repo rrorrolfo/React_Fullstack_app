@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 class UserSignIn extends Component {
 
@@ -14,19 +15,21 @@ class UserSignIn extends Component {
                         <div>
                             <form>
                                 <div>
-                                    <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" value=""/>
+                                    <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address"/>
                                 </div>
                                 <div>
-                                    <input id="password" name="password" type="password" className="" placeholder="Password" value=""/>
+                                    <input id="password" name="password" type="password" className="" placeholder="Password"/>
                                 </div>
                                 <div className="grid-100 pad-bottom">
                                     <button className="button" type="submit">Sign In</button>
-                                    <button className="button button-secondary" /*onClick="event.preventDefault(); location.href='index.html';"*/>Cancel</button>
+                                    <Link to="/">
+                                        <button className="button button-secondary" onClick={this.preventDefault} >Cancel</button>
+                                    </Link>
                                 </div>
                             </form>
                         </div>
                         <p>&nbsp;</p>
-                        <p>Don't have a user account? <a href="sign-up.html">Click here</a> to sign up!</p>
+                        <p>Don't have a user account? <Link to="/signup">Click here</Link> to sign up!</p>
                 </div>
             </div>
         )

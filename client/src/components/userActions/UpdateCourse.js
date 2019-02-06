@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+
 
 class UpdateCourse extends Component {
 
@@ -65,7 +67,9 @@ class UpdateCourse extends Component {
                         </div>
                         <div className="grid-100 pad-bottom">
                             <button className="button" type="submit">Update Course</button>
-                            <button className="button button-secondary" /*onclick="event.preventDefault(); location.href='course-detail.html';"*/>Cancel</button>
+                            <Link to="/">
+                                <button className="button button-secondary" onClick={this.preventDefault}>Cancel</button>
+                            </Link>
                         </div>
                     </form>
                 </div>
