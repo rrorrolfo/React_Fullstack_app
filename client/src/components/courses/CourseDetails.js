@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
+const ReactMarkdown = require('react-markdown');
 
 // This component renders the details of Link selected course
 // Need to transform required materials to Link list
@@ -50,7 +51,7 @@ class CourseDetails extends Component {
               <p>By Joe Smith</p>
             </div>
             <div className="course--description">
-              <p>{ fetchedCourse.description }</p>
+              <ReactMarkdown source={ fetchedCourse.description }/>
             </div>
           </div>
           <div className="grid-25 grid-right">
@@ -63,16 +64,7 @@ class CourseDetails extends Component {
                 <li className="course--stats--list--item">
                   <h4>Materials Needed</h4>
                   <ul>
-                    <li>1/2 x 3/4 inch parting strip</li>
-                    <li>1 x 2 common pine</li>
-                    <li>1 x 4 common pine</li>
-                    <li>1 x 10 common pine</li>
-                    <li>1/4 inch thick lauan plywood</li>
-                    <li>Finishing Nails</li>
-                    <li>Sandpaper</li>
-                    <li>Wood Glue</li>
-                    <li>Wood Filler</li>
-                    <li>Minwax Oil Based Polyurethane</li>
+                    <ReactMarkdown source={fetchedCourse.materialsNeeded}/>
                   </ul>
                 </li>
               </ul>

@@ -3,6 +3,8 @@ import './App.css';
 import { 
   BrowserRouter,
   Route} from "react-router-dom";
+
+// App components
 import Header from './components/Header';
 import Courses from './components/courses/Courses';
 import CourseDetails from "./components/courses/CourseDetails";
@@ -21,9 +23,9 @@ class App extends Component {
         <div>
           <Header />
           <Route exact path="/" render={ () => <Courses /> }/>
-          <Route path="/courses/:id" render={ () => <CourseDetails /> }/>
-          <Route path="/courses/create" render={ () => <CreateCourse /> }/>
-          <Route path="/courses/:id/update" render={ (props) => <UpdateCourse {...props}/> }/>
+          <Route exact path="/courses/:id" render={ () => <CourseDetails /> }/>
+          <Route exact path="/courses/create" render={ () => <CreateCourse /> }/>
+          <Route exact path="/courses/:id/update" render={ () => <UpdateCourse /> }/>
           <Route path="/signin" render={ () => <UserSignIn /> }/>
           <Route path="/signup" render={ () => <UserSignUp /> }/>
           {/*<Route path="/signout" render={ () => <UserSignOut /> }/>*/}

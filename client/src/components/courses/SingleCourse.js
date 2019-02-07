@@ -5,14 +5,12 @@ import { Link } from "react-router-dom";
 
 const SingleCourse = ({ title, courseID }) => {
     return(
-        <div className="bounds">
             <div className="grid-33">
                 <Link className="course--module course--link" to={`courses/${courseID}`}>
                     <h4 className="course--label">Course</h4>
                     <h3 className="course--title">{ title }</h3>
                 </Link>
             </div>
-        </div>
     )
 }
 
