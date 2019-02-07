@@ -1,14 +1,33 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { withRouter } from "react-router";
 
 
 class UpdateCourse extends Component {
 
     state = {
+        courseToUpdate: ""
+    }
 
+    componentDidMount() {
+
+        const courseToDisplay = this.props.match.params.id;
+
+         // Fetches course details from DB
+         axios.get(`http://localhost:5000/api/courses/${courseToDisplay}`)
+         .then(response => {
+             this.setState( {courseToUpdate: response.data} )
+             console.log(this.state.courseToUpdate)})
+         .catch(error => console.log("Error fetching and parsing data", error));
     }
 
     render() {
+        const fetchedCourse = this.state.courseToUpdate;
+        const user = fetchedCourse.user; 
+        console.log(user);
+        
+
         return (
             <div className="bounds course--detail">
                 <h1>Update Course</h1>
@@ -19,19 +38,14 @@ class UpdateCourse extends Component {
                                 <h4 className="course--label">Course</h4>
                             <div>
                                 <input id="title" name="title" type="text" className="input-title course--title--input" placeholder="Course title..."
-                                value="Build a Basic Bookcase"/>
+                                value=""/>
                             </div>
-                                <p>By Joe Smith</p>
+                                <p>By {`${user}`}</p>
                             </div>
                             <div className="course--description">
                                 <div>
-                                    <textarea id="description" name="description" className="" placeholder="Course description...">High-end furniture projects are great to dream about. But unless you have a well-equipped shop and some serious woodworking experience to draw on, it can be difficult to turn the dream into a reality.
-
-                                Not every piece of furniture needs to be a museum showpiece, though. Often a simple design does the job just as well and the experience gained in completing it goes a long way toward making the next project even better.
-
-                                Our pine bookcase, for example, features simple construction and it's designed to be built with basic woodworking tools. Yet, the finished project is a worthy and useful addition to any room of the house. While it's meant to rest on the floor, you can convert the bookcase to a wall-mounted storage unit by leaving off the baseboard. You can secure the cabinet to the wall by screwing through the cabinet cleats into the wall studs.
-
-                                The specifications that follow will produce a bookcase with overall dimensions of 10 3/4 in. deep x 34 in. wide x 48 in. tall. While the depth of the case is directly tied to the 1 x 10 stock, you can vary the height, width and shelf spacing to suit your needs. Keep in mind, though, that extending the width of the cabinet may require the addition of central shelf supports.
+                                    <textarea id="description" name="description" className="" placeholder="Course description...">
+                                    {/*//description*/}
                                     </textarea>
                                 </div>
                             </div>
@@ -79,4 +93,4 @@ class UpdateCourse extends Component {
 
 }
 
-export default UpdateCourse;
+export default withRouter(UpdateCourse);
