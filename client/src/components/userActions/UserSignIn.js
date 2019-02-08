@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { Consumer } from "../Context/index"
 import authenticationMethods from "../authentication/authMethods"
 
 class UserSignIn extends Component {
 
     state = {
         emailAddress: "",
-        password: "",
-        loading: false
+        password: ""
     }
 
     // Handles change in an input, updates state to the value of the correspondant input
@@ -16,20 +16,16 @@ class UserSignIn extends Component {
         this.setState({ [name]: value });
     }
 
-    handleSubmit = ( event ) => {
-        event.preventDefault();
-        // Sends credentials to server to be able to login
-        authenticationMethods.login(this.state.emailAddress, this.state.password)
-
-    }
-
     render() {
         return(
-            <div className="bounds">
+        <Consumer>
+            { context => (
+
+                <div className="bounds">
                 <div className="grid-33 centered signin">
                     <h1>Sign In</h1>
                         <div>
-                            <form onSubmit={ this.handleSubmit }>
+                            <form onSubmit={ event => {event.preventDefault(); context.actions.logIn(this.state.emailAddress, this.state.password);} }>
                                 <div>
                                     <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" value={this.state.emailAddress} onChange={ this.handleChange }/>
                                 </div>
@@ -48,6 +44,9 @@ class UserSignIn extends Component {
                         <p>Don't have a user account? <Link to="/signup">Click here</Link> to sign up!</p>
                 </div>
             </div>
+            )}
+        </Consumer>
+            
         )
     }
 
