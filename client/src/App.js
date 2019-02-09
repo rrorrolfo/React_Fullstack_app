@@ -90,7 +90,7 @@ logOut = () => {
               <Route exact path="/courses/:id" render={ () => <CourseDetails /> }/>
               <Route path="/courses/:id/update" render={ () => <UpdateCourse /> }/>
               <Route path="/signin" render={ () =>  this.state.loggedUser ? <Redirect to="/" /> : <UserSignIn />}/>
-              <Route path="/signup" render={ () => <UserSignUp /> }/>
+              <Route path="/signup" render={ () => this.state.loggedUser ? <Redirect to="/" /> : <UserSignUp /> }/>
 {/* Need to polish this route */}
               <Route path="/signout" render={ () => this.state.loggedUser ? <UserSignOut /> : <Redirect to="/" />}/>
               <Route path="/notfound" component={ NotFound }/>
