@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Consumer } from "../Context/index"
-import authenticationMethods from "../authentication/authMethods"
+import { Consumer } from "../Context/index";
 
 class UserSignIn extends Component {
 
