@@ -1,17 +1,27 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Consumer } from "../components/Context/index"
 
 const Header = () => {
     return (
-        <div className="header">
-            <div className="bounds">
-                <h1 className="header--logo"><Link to="/">Courses</Link></h1>
-                <nav>
-                    <Link to="/signup" className="signup">Sign Up</Link>
-                    <Link to="/signin" className="signin">Sign In</Link>
-                </nav>
-            </div>
-        </div>
+        <Consumer>
+
+        { context => <div className="header">
+                <div className="bounds">
+                    <h1 className="header--logo"><Link to="/">Courses</Link></h1>
+                    <nav>
+                        { context.user ? 
+                        <Link to="/signout" className="signup">Log Out</Link> :
+                        <React.Fragment> 
+                            <Link to="/signup" className="signup">Sign Up</Link>
+                            <Link to="/signin" className="signin">Sign In</Link>
+                        </React.Fragment>
+                        }
+                    </nav>
+                </div>
+            </div>}
+            
+        </Consumer>
     )
 }
 
