@@ -22,6 +22,7 @@ import NotFound from './components/NotFound';
 
 class App extends Component {
 
+// Global state which holds the logged user
   state = {
       loggedUser: null
   }
@@ -63,9 +64,10 @@ class App extends Component {
     .catch( error => console.log(error) );
 }
 
+// Method that logsOut a loggedin user 
 logOut = () => {
   this.setState({
-    user: null
+    loggedUser: null
   })
 }
 
@@ -75,7 +77,6 @@ logOut = () => {
         user: this.state.loggedUser,
         actions: {
           logIn: this.logIn,
-          logOut: this.logOut,
           saveLoggedUser: this.saveLoggedUser
         }
       } }>
@@ -91,8 +92,7 @@ logOut = () => {
               <Route path="/courses/:id/update" render={ () => <UpdateCourse /> }/>
               <Route path="/signin" render={ () =>  this.state.loggedUser ? <Redirect to="/" /> : <UserSignIn />}/>
               <Route path="/signup" render={ () => this.state.loggedUser ? <Redirect to="/" /> : <UserSignUp /> }/>
-{/* Need to polish this route */}
-              <Route path="/signout" render={ () => this.state.loggedUser ? <UserSignOut /> : <Redirect to="/" />}/>
+              <Route path="/signout" render={ () => <UserSignOut logOut={this.logOut}/> }/>
               <Route path="/notfound" component={ NotFound }/>
               <Route render={ () => <Redirect to="/notfound"/> }/>
               
