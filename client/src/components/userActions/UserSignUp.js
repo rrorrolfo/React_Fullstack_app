@@ -41,9 +41,11 @@ class UserSignUp extends Component {
     }
 
     createUser = () => {
+
         const user = {
             data: {
-                user: `${this.state.firstName} ${this.state.lastName}`
+                user: `${this.state.firstName} ${this.state.lastName}`,
+                userID: ""
             },
             authdata: window.btoa( this.state.emailAddress + ':' + this.state.password)
         }

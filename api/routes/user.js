@@ -9,7 +9,7 @@ router.get("/users", authentication.authenticateUser, (req, res, next) => {
     const authenticatedUser = req.currentUser;
 
     // Authenticated user
-    res.json( { user: `${authenticatedUser.firstName} ${authenticatedUser.lastName}` });
+    res.json( { user: `${authenticatedUser.firstName} ${authenticatedUser.lastName}`, userID: authenticatedUser._id });
 });
 
 
