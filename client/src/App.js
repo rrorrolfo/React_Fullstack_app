@@ -18,13 +18,15 @@ import UserSignOut from "./components/userActions/UserSignOut"
 import CreateCourse from './components/userActions/CreateCourse';
 import UpdateCourse from './components/userActions/UpdateCourse';
 import NotFound from './components/NotFound';
+import PrivateRoute from "./components/PrivateRoute";
 
 
 class App extends Component {
 
 // Global state which holds the logged user
   state = {
-      loggedUser: null
+      loggedUser: null,
+      isUserAuthenticated: false
   }
 
   // Update loggedUser in state to the loggedin user
@@ -32,6 +34,36 @@ class App extends Component {
     this.setState({
       loggedUser: user
     })
+  }
+
+  componentDidUpdate() {
+
+    // Authenticates the current loggedin user 
+    if (this.state.loggedUser && this.state.isUserAuthenticated === false) {
+
+      const requestOptions = {
+        headers: { 
+            'Content-Type': 'application/json',
+            "Authorization": `Basic ${this.state.loggedUser.authdata}`
+        }
+      };
+
+      return axios.get("http://localhost:5000/api/users", requestOptions)
+      .then( response => {
+        if (response.status === 200) {
+          this.setState({
+            isUserAuthenticated: true
+          })
+        } else {
+          console.log(response)
+        }
+      })
+      .catch( error => console.log(error) )
+    } else if (!this.state.loggedUser && this.state.isUserAuthenticated ===true) {
+      this.setState({
+        isUserAuthenticated: false
+      })
+    }
   }
 
   // Method that makes a get request to the REST API with Basic authentication headers in oder to retrieve an user if it exists and store it in local storage as "user"
@@ -75,6 +107,7 @@ logOut = () => {
     return (
       <Provider value={ {
         user: this.state.loggedUser,
+        isAuthenticated: this.state.isUserAuthenticated,
         actions: {
           logIn: this.logIn,
           saveLoggedUser: this.saveLoggedUser
@@ -87,9 +120,9 @@ logOut = () => {
             <Switch>
               
               <Route exact path="/" render={ () => <Courses /> }/>
-              <Route exact path="/courses/create" render={ () => <CreateCourse /> }/>
+              <PrivateRoute exact path="/courses/create" component={ CreateCourse }/>
               <Route exact path="/courses/:id" render={ () => <CourseDetails /> }/>
-              <Route path="/courses/:id/update" render={ () => <UpdateCourse /> }/>
+              <PrivateRoute path="/courses/:id/update" component={ UpdateCourse }/>
               <Route path="/signin" render={ () =>  this.state.loggedUser ? <Redirect to="/" /> : <UserSignIn />}/>
               <Route path="/signup" render={ () => this.state.loggedUser ? <Redirect to="/" /> : <UserSignUp /> }/>
               <Route path="/signout" render={ () => <UserSignOut logOut={this.logOut}/> }/>
