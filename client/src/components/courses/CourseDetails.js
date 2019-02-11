@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
-import { Consumer } from "../Context/index"
+import { Consumer } from "../Context/index";
 const ReactMarkdown = require('react-markdown');
 
 // This component renders the details of Link selected course
@@ -31,7 +31,7 @@ class CourseDetails extends Component {
   }
 
   // Deletes currently displayed course
-  deleteCourse = userToAuthenticate => {
+  deleteCourse = (userToAuthenticate, callback) => {
 
     // Creates Headers to authenticate user and send it together with the request
     const requestOptions = {
@@ -43,7 +43,8 @@ class CourseDetails extends Component {
 
     // Delete request to delete current course
     axios.delete(`http://localhost:5000/api/courses/${this.state.course._id}`, requestOptions)
-    .then(response => console.log(response))
+    // Toggles Loading global state to false
+    .then(response => { callback(); })
     .catch(error => console.log("Error fetching and parsing data", error));
 
 }
@@ -68,7 +69,8 @@ class CourseDetails extends Component {
                   context.isAuthenticated && this.state.courseOwner._id === context.user.data.userID ?  (
                     <span>
                       <Link className="button" to={`/courses/${fetchedCourse._id}/update`}>Update Course</Link>
-                      <Link className="button" to="/" onClick={this.deleteCourse(context.user.authdata)}>Delete Course</Link>
+                      <Link className="button" to="/" onClick={ () => { context.actions.toggleLoading(); 
+                      this.deleteCourse(context.user.authdata, context.actions.toggleLoading); }}>Delete Course</Link>
                     </span>
                 ) : ( console.log("User is not owner of the course"))
                 ) : ( console.log("User is not owner of the course"))

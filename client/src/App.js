@@ -26,13 +26,21 @@ class App extends Component {
 // Global state which holds the logged user
   state = {
       loggedUser: null,
-      isUserAuthenticated: false
+      isUserAuthenticated: false,
+      loading: false
   }
 
   // Update loggedUser in state to the loggedin user
   saveLoggedUser = user => {
     this.setState({
       loggedUser: user
+    })
+  }
+
+  // Toggle loading status method
+  toggleLoading = () => {
+    this.setState({
+      loading: !this.state.loading
     })
   }
 
@@ -108,9 +116,11 @@ logOut = () => {
       <Provider value={ {
         user: this.state.loggedUser,
         isAuthenticated: this.state.isUserAuthenticated,
+        isLoading: this.state.loading,
         actions: {
           logIn: this.logIn,
-          saveLoggedUser: this.saveLoggedUser
+          saveLoggedUser: this.saveLoggedUser,
+          toggleLoading: this.toggleLoading
         }
       } }>
         <BrowserRouter>
