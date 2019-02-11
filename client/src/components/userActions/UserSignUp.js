@@ -1,7 +1,11 @@
 import React, { Component } from "react";
+import ErrorElement from "../UIElements/ErrorElement"
 import { Link } from "react-router-dom";
+import { withRouter } from "react-router";
 import { Consumer } from "../Context/index";
 import axios from "axios";
+
+// This class component render a form to sign up to the App
 
 class UserSignUp extends Component {
 
@@ -10,7 +14,8 @@ class UserSignUp extends Component {
         lastName: "",
         emailAddress: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        errors: []
     }
 
     // Handles change in an input, updates state to the value of the correspondant input
@@ -30,12 +35,14 @@ class UserSignUp extends Component {
                 emailAddress: this.state.emailAddress,
                 password: this.state.password
                 })
-                .then( response => console.log(response))
-                .catch( error => console.log(error.message))
+                .then( response => { if ( response.status === 201) {this.props.history.push("/")} })
+                .catch(error => { console.error(error); this.setState({ errors: error.response.data.errors })});                
           
         } else {
             const error = new Error("Passwords do not match");
-            console.error(error);
+            this.setState({
+                errors: [error.message]
+            })
         }
         
     }
@@ -53,6 +60,18 @@ class UserSignUp extends Component {
         return(user)
     }
 
+    // Function tha renders errors if  present
+
+    renderErrors = () => { 
+        const errorsToDisplay = [];
+        for (let i = 0; i < this.state.errors.length; i += 1) {
+                            
+            errorsToDisplay.push(<ErrorElement errorMessage={this.state.errors[i]} key={i + 1} />)
+            }
+            
+            return errorsToDisplay
+        }
+
     render() {
 
         return(
@@ -63,7 +82,20 @@ class UserSignUp extends Component {
                     <div className="grid-33 centered signin">
                     <h1>Sign Up</h1>
                         <div>
-                            <form onSubmit={ event => {this.handleSubmit(event); context.actions.saveLoggedUser(this.createUser())} }>
+
+                            {/* Displays error messages in case they are present*/}
+                            {this.state.errors.length !== 0 ? (
+                                <div>
+                                    <h2 className="validation--errors--label">Validation errors</h2>
+                                    <div className="validation-errors">
+                                    <ul>
+                                        { this.renderErrors() }
+                                    </ul>
+                                    </div>
+                                </div>
+                            ) : ("") }
+
+                            <form onSubmit={ event => {this.handleSubmit(event); /*context.actions.saveLoggedUser(this.createUser())*/} }>
                                 <div>
                                     <input id="firstName" name="firstName" type="text" placeholder="First Name" value={this.state.firstName} onChange={ this.handleChange }/>
                                 </div>
@@ -79,13 +111,16 @@ class UserSignUp extends Component {
                                 <div>
                                     <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm Password" value={this.state.confirmPassword} onChange={ this.handleChange }/>
                                 </div>
+
                                 <div className="grid-100 pad-bottom">
                                     <button className="button" type="submit">Sign Up</button>
                                     <Link to="/">
                                         <button className="button button-secondary" onClick={ this.preventDefault }>Cancel</button>
                                     </Link>
                                 </div>
+
                             </form>
+
                         </div>
                         <p>&nbsp;</p>
                         <p>Already have a user account? <a href="sign-in.html">Click here</a> to sign in!</p>
@@ -100,4 +135,4 @@ class UserSignUp extends Component {
     
 }
 
-export default UserSignUp;
+export default withRouter(UserSignUp);
