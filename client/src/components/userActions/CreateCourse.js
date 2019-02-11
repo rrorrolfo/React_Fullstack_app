@@ -22,7 +22,7 @@ class CreateCourse extends Component {
             }
         };
 
-        // Posr request to create the course
+        // Post request to create the course
         axios.post("http://localhost:5000/api/courses", {
             title: this.titleRef.current.value,
             description:this.descriptionRef.current.value,
@@ -30,7 +30,7 @@ class CreateCourse extends Component {
             materialsNeeded:this.materialsNeededRef.current.value
         },
         requestOptions)
-        .then( response => console.log(response))
+        .then( response => { console.log(response); this.props.history.push("/"); })
         .catch(error => console.log("Error fetching and parsing data", error));
 
     }
