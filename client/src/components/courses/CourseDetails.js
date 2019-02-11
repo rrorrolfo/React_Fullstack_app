@@ -31,7 +31,7 @@ class CourseDetails extends Component {
   }
 
   // Deletes currently displayed course
-  deleteCourse = (userToAuthenticate, callback) => {
+  deleteCourse = (userToAuthenticate) => {
 
     // Creates Headers to authenticate user and send it together with the request
     const requestOptions = {
@@ -43,8 +43,8 @@ class CourseDetails extends Component {
 
     // Delete request to delete current course
     axios.delete(`http://localhost:5000/api/courses/${this.state.course._id}`, requestOptions)
-    // Toggles Loading global state to false
-    .then(response => { callback(); })
+    // Redirects to root route
+  .then(response => { this.props.history.push("/") })
     .catch(error => console.log("Error fetching and parsing data", error));
 
 }
@@ -69,8 +69,7 @@ class CourseDetails extends Component {
                   context.isAuthenticated && this.state.courseOwner._id === context.user.data.userID ?  (
                     <span>
                       <Link className="button" to={`/courses/${fetchedCourse._id}/update`}>Update Course</Link>
-                      <Link className="button" to="/" onClick={ () => { context.actions.toggleLoading(); 
-                      this.deleteCourse(context.user.authdata, context.actions.toggleLoading); }}>Delete Course</Link>
+                      <button className="button" onClick={ () => this.deleteCourse(context.user.authdata) }>Delete Course</button>
                     </span>
                 ) : ( console.log("User is not owner of the course"))
                 ) : ( console.log("User is not owner of the course"))
