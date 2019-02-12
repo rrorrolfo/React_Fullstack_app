@@ -6,7 +6,8 @@ import {
   Route,
   Redirect,
   Switch} from "react-router-dom";
-import { Provider } from "./components/Context/index"
+import { Provider } from "./components/Context/index";
+import { CookiesProvider, withCookies } from 'react-cookie';
 
 // App components
 import Header from './components/Header';
@@ -27,6 +28,15 @@ class App extends Component {
   state = {
       loggedUser: null,
       isUserAuthenticated: false
+  }
+
+  componentDidMount() {
+    if (this.props.cookies) {
+      const loggedInUser = JSON.parse(this.props.cookies.cookies.userCookie);
+      this.setState({
+        loggedUser: loggedInUser
+      });
+    }
   }
 
   componentDidUpdate() {
@@ -80,6 +90,8 @@ class App extends Component {
                 // store user details and basic auth credentials in local storage 
                 // to keep user logged in between page refreshes
                 user.authdata = B64user;
+                // Set found user into a cookie
+                this.props.cookies.set("userCookie", user)
                 // Update loggedUser in state to the loggedin user
                 this.setState({
                   loggedUser: user
@@ -93,6 +105,7 @@ class App extends Component {
 
 // Method that logsOut a loggedin user 
 logOut = () => {
+  this.props.cookies.remove("userCookie");
   this.setState({
     loggedUser: null
   })
@@ -107,29 +120,31 @@ logOut = () => {
           logIn: this.logIn
         }
       } }>
-        <BrowserRouter>
-          <div>
-          
-            <Header />
-            <Switch>
-              
-              <Route exact path="/" render={ () => <Courses /> }/>
-              <PrivateRoute exact path="/courses/create" component={ CreateCourse }/>
-              <Route exact path="/courses/:id" render={ () => <CourseDetails /> }/>
-              <PrivateRoute path="/courses/:id/update" component={ UpdateCourse }/>
-              <Route path="/signin" render={ () =>  this.state.loggedUser ? <Redirect to="/" /> : <UserSignIn />}/>
-              <Route path="/signup" render={ () => this.state.loggedUser ? <Redirect to="/" /> : <UserSignUp logIn={this.logIn}/> }/>
-              <Route path="/signout" render={ () => <UserSignOut logOut={this.logOut}/> }/>
-              <Route path="/notfound" component={ NotFound }/>
-              <Route render={ () => <Redirect to="/notfound"/> }/>
-              
-            </Switch>
+        <CookiesProvider>
+          <BrowserRouter>
+            <div>
+            
+              <Header />
+              <Switch>
+                
+                <Route exact path="/" render={ () => <Courses /> }/>
+                <PrivateRoute exact path="/courses/create" component={ CreateCourse }/>
+                <Route exact path="/courses/:id" render={ () => <CourseDetails /> }/>
+                <PrivateRoute path="/courses/:id/update" component={ UpdateCourse }/>
+                <Route path="/signin" render={ () =>  this.state.loggedUser ? <Redirect to="/" /> : <UserSignIn />}/>
+                <Route path="/signup" render={ () => this.state.loggedUser ? <Redirect to="/" /> : <UserSignUp logIn={this.logIn}/> }/>
+                <Route path="/signout" render={ () => <UserSignOut logOut={this.logOut}/> }/>
+                <Route path="/notfound" component={ NotFound }/>
+                <Route render={ () => <Redirect to="/notfound"/> }/>
+                
+              </Switch>
 
-          </div>
-        </BrowserRouter>
+            </div>
+          </BrowserRouter>
+        </CookiesProvider>
       </Provider>
     );
   }
 }
 
-export default App;
+export default withCookies(App);
