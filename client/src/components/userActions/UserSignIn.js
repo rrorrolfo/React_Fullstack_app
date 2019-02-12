@@ -1,6 +1,9 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import { Consumer } from "../Context/index";
+import ErrorElement from "../UIElements/ErrorElement";
+import { Cookies } from "react-cookie";
+const cookies = new Cookies();
 
 class UserSignIn extends Component {
 
@@ -16,6 +19,15 @@ class UserSignIn extends Component {
     }
 
     render() {
+
+        const { from } = this.props.location.state || { from: { pathname: '/'}};
+
+        if(cookies.get("userCookie")){
+            return (
+                <Redirect to={from} />
+            )
+        }
+        
         return(
         <Consumer>
             { context => (
@@ -23,6 +35,19 @@ class UserSignIn extends Component {
                 <div className="bounds">
                 <div className="grid-33 centered signin">
                     <h1>Sign In</h1>
+
+                        {/* Redirects to /error in case of a 500 error or displays error messages in case they are present (401 error)*/}
+                        {context.errors[0] === 500 ? (<Redirect to={"/error"} />) : (
+                        context.errors.length !== 0 ? (
+                                <div>
+                                    <div className="validation-errors">
+                                    <ul>
+                                        <ErrorElement errorMessage={context.errors[0]} />
+                                    </ul>
+                                    </div>
+                                </div>
+                            ) : ("") )}
+
                         <div>
                             <form onSubmit={ event => {event.preventDefault(); context.actions.logIn(this.state.emailAddress, this.state.password);} }>
                                 <div>
@@ -51,4 +76,4 @@ class UserSignIn extends Component {
 
 }
 
-export default UserSignIn;
+export default withRouter(UserSignIn);

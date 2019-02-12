@@ -19,6 +19,7 @@ import UserSignOut from "./components/userActions/UserSignOut"
 import CreateCourse from './components/userActions/CreateCourse';
 import UpdateCourse from './components/userActions/UpdateCourse';
 import NotFound from './components/NotFound';
+import ErrorRoute from "./components/ErrorRoute";
 import PrivateRoute from "./components/PrivateRoute";
 const cookies = new Cookies();
 
@@ -28,7 +29,8 @@ class App extends Component {
 // Global state which holds the logged user and the authentication status
   state = {
       loggedUser: null,
-      isUserAuthenticated: false
+      isUserAuthenticated: false,
+      errors: []
   }
 
 
@@ -89,10 +91,9 @@ class App extends Component {
     .then(user => {
             // login successful if there's a user in the response
             if (user) {
-                // store user details and basic auth credentials in local storage 
                 // to keep user logged in between page refreshes
                 user.authdata = B64user;
-                // Set found user into a cookie
+                // Stores obtaint user´s data (including authdata) in cookie called "usercookie"
                 this.props.cookies.set("userCookie", user, {path: "/"})
                 // Update loggedUser in state to the loggedin user
                 this.setState({
@@ -102,7 +103,16 @@ class App extends Component {
 
             return user;
         })
-    .catch( error => console.log(error) );
+    .catch( error =>  {if( error.response.status === 401) {
+      this.setState({
+        errors: ["Email address or password incorrect"]
+      })} else {
+        this.setState({
+          errors: [500]
+        })
+      }
+    } 
+    );
 }
 
 // Method that logsOut a loggedin user 
@@ -118,6 +128,7 @@ logOut = () => {
       <Provider value={ {
         user: this.state.loggedUser,
         isAuthenticated: this.state.isUserAuthenticated,
+        errors: this.state.errors,
         actions: {
           logIn: this.logIn
         }
@@ -136,6 +147,7 @@ logOut = () => {
                 <Route path="/signin" render={ () =>  this.state.loggedUser ? <Redirect to="/" /> : <UserSignIn />}/>
                 <Route path="/signup" render={ () => this.state.loggedUser ? <Redirect to="/" /> : <UserSignUp logIn={this.logIn}/> }/>
                 <Route path="/signout" render={ () => <UserSignOut logOut={this.logOut}/> }/>
+                <Route path="/error" component={ ErrorRoute } />
                 <Route path="/notfound" component={ NotFound }/>
                 <Route render={ () => <Redirect to="/notfound"/> }/>
                 
