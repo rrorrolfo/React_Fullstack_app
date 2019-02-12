@@ -34,7 +34,7 @@ class UserSignIn extends Component {
                                 <div className="grid-100 pad-bottom">
                                     <button className="button" type="submit">Sign In</button>
                                     <Link to="/">
-                                        <button className="button button-secondary" onClick={this.preventDefault} >Cancel</button>
+                                        <button className="button button-secondary">Cancel</button>
                                     </Link>
                                 </div>
                             </form>
