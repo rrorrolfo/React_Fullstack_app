@@ -31,16 +31,19 @@ class UpdateCourse extends Component {
          // Fetches course details from DB
          axios.get(`http://localhost:5000/api/courses/${courseToDisplay}`)
          .then(response => {
-             this.setState( {
-                                title: response.data.title,
-                                description: response.data.description,
-                                estimatedTime: response.data.estimatedTime,
-                                materialsNeeded: response.data.materialsNeeded,
-                                user: response.data.user,
-                                courseID: response.data._id
-                            })
-                        })
-         .catch(error => console.log("Error fetching and parsing data", error));
+            if ( response.status === 200) {
+                this.setState( {
+                    title: response.data.title,
+                    description: response.data.description,
+                    estimatedTime: response.data.estimatedTime,
+                    materialsNeeded: response.data.materialsNeeded,
+                    user: response.data.user,
+                    courseID: response.data._id
+                })
+            }
+             
+        })
+         .catch(error => {console.error("Error fetching and parsing data", error); this.props.history.push("/notfound")});
     }
 
     handleSubmit = userToAuthenticate => {

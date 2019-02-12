@@ -24,9 +24,11 @@ class CourseDetails extends Component {
         // Fetches course details from DB
         axios.get(`http://localhost:5000/api/courses/${courseToDisplay}`)
         .then(response => {
+          if ( response.status === 200) {
             this.setState( {course: response.data, courseOwner: response.data.user} )
-            console.log(this.state.course)})
-        .catch(error => console.log("Error fetching and parsing data", error));
+          } 
+        })   
+        .catch(error => {console.error("Error fetching and parsing data", error); this.props.history.push("/notfound")} );
 
   }
 
@@ -71,8 +73,8 @@ class CourseDetails extends Component {
                       <Link className="button" to={`/courses/${fetchedCourse._id}/update`}>Update Course</Link>
                       <button className="button" onClick={ () => this.deleteCourse(context.user.authdata) }>Delete Course</button>
                     </span>
-                ) : ( console.log("User is not owner of the course"))
-                ) : ( console.log("User is not owner of the course"))
+                ) : ( "")
+                ) : ( "")
                 
               }
               
