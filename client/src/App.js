@@ -23,17 +23,10 @@ import PrivateRoute from "./components/PrivateRoute";
 
 class App extends Component {
 
-// Global state which holds the logged user
+// Global state which holds the logged user and the authentication status
   state = {
       loggedUser: null,
       isUserAuthenticated: false
-  }
-
-  // Update loggedUser in state to the loggedin user
-  saveLoggedUser = user => {
-    this.setState({
-      loggedUser: user
-    })
   }
 
   componentDidUpdate() {
@@ -87,8 +80,10 @@ class App extends Component {
                 // store user details and basic auth credentials in local storage 
                 // to keep user logged in between page refreshes
                 user.authdata = B64user;
-                this.saveLoggedUser(user);
-                console.log(user);
+                // Update loggedUser in state to the loggedin user
+                this.setState({
+                  loggedUser: user
+                })
             }
 
             return user;
@@ -109,9 +104,7 @@ logOut = () => {
         user: this.state.loggedUser,
         isAuthenticated: this.state.isUserAuthenticated,
         actions: {
-          logIn: this.logIn,
-          saveLoggedUser: this.saveLoggedUser,
-          toggleLoading: this.toggleLoading
+          logIn: this.logIn
         }
       } }>
         <BrowserRouter>
@@ -125,7 +118,7 @@ logOut = () => {
               <Route exact path="/courses/:id" render={ () => <CourseDetails /> }/>
               <PrivateRoute path="/courses/:id/update" component={ UpdateCourse }/>
               <Route path="/signin" render={ () =>  this.state.loggedUser ? <Redirect to="/" /> : <UserSignIn />}/>
-              <Route path="/signup" render={ () => this.state.loggedUser ? <Redirect to="/" /> : <UserSignUp /> }/>
+              <Route path="/signup" render={ () => this.state.loggedUser ? <Redirect to="/" /> : <UserSignUp logIn={this.logIn}/> }/>
               <Route path="/signout" render={ () => <UserSignOut logOut={this.logOut}/> }/>
               <Route path="/notfound" component={ NotFound }/>
               <Route render={ () => <Redirect to="/notfound"/> }/>
