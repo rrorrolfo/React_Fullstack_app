@@ -23,9 +23,8 @@ router.post("/users", (req, res, next) => {
     User.findOne( {emailAddress: user.emailAddress}, null, (error, userEmail) => {
 
         if (userEmail) {
-            error = new Error("Email address already registered");
-            error.status = 400;
-            return next(error);
+
+            return res.status(400).json({errors: ["Email address already registered"]});
 
         }
 
