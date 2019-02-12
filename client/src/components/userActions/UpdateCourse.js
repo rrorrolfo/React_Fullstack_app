@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { withRouter } from "react-router";
-import { Consumer } from "../Context/index"
+import { Consumer } from "../Context/index";
+import ErrorElement from "../UIElements/ErrorElement";
 
 
 class UpdateCourse extends Component {
@@ -13,6 +14,7 @@ class UpdateCourse extends Component {
         estimatedTime: "",
         materialsNeeded:"",
         courseID:"",
+        errors: [],
         user: null
     }
 
@@ -41,30 +43,53 @@ class UpdateCourse extends Component {
          .catch(error => console.log("Error fetching and parsing data", error));
     }
 
-    handleSubmit = (userToAuthenticate, callback) => {
-        // If user passes REST API authentication the course will be created
+    handleSubmit = userToAuthenticate => {
+        // This method updates the selected course if the user passes REST API athentication
+
+        if ( this.state.title === "") {
+            this.setState({
+                errors: ["Title is required"]
+            })
+            
+        } else if ( this.state.description === ""){
+            this.setState({
+                errors: ["Description is required"]
+            })
+        } else {
         
-        // Creates Headers to authenticate user and send it together with the request
-        const requestOptions = {
-            headers: { 
-                'Content-Type': 'application/json',
-                "Authorization": `Basic ${userToAuthenticate}`
+            // Creates Headers to authenticate user and send it together with the request
+            const requestOptions = {
+                headers: { 
+                    'Content-Type': 'application/json',
+                    "Authorization": `Basic ${userToAuthenticate}`
+                }
+            };
+
+            // Post request to create the course
+            axios.put(`http://localhost:5000/api/courses/${this.state.courseID}`, {
+                title: this.state.title,
+                description:this.state.description,
+                estimatedTime: this.state.estimatedTime,
+                materialsNeeded:this.state.materialsNeeded,
+                user: this.state.user._id
+            },
+            requestOptions)
+            .then( response => { if ( response.status === 204) {this.props.history.push("/")} })
+            .catch(error => { console.error(error); this.setState({ errors: error.response.data.errors })});
+
             }
-        };
+        }
 
-        // Post request to create the course
-        axios.put(`http://localhost:5000/api/courses/${this.state.courseID}`, {
-            title: this.state.title,
-            description:this.state.description,
-            estimatedTime: this.state.estimatedTime,
-            materialsNeeded:this.state.materialsNeeded,
-            user: this.state.user._id
-        },
-        requestOptions)
-        .then( response => {console.log(response); callback(); this.props.history.push("/") })
-        .catch(error => console.log("Error fetching and parsing data", error));
-
-    }
+    // Method that renders errors if  present
+    renderErrors = () => { 
+        const errorsToDisplay = [];
+        for (let i = 0; i < this.state.errors.length; i += 1) {
+                            
+            errorsToDisplay.push(<ErrorElement errorMessage={this.state.errors[i]} key={i + 1} />)
+            }
+            
+            return errorsToDisplay
+        }
 
     render() {
 
@@ -78,7 +103,20 @@ class UpdateCourse extends Component {
                     <div className="bounds course--detail">
                 <h1>Update Course</h1>
                 <div>
-                    <form onSubmit={event => {event.preventDefault(); context.actions.toggleLoading(); this.handleSubmit(context.user.authdata, context.actions.toggleLoading); }}>
+                    
+                    {/* Displays error messages in case they are present*/}
+                    {this.state.errors.length !== 0 ? (
+                                <div>
+                                    <h2 className="validation--errors--label">Validation errors</h2>
+                                    <div className="validation-errors">
+                                    <ul>
+                                        { this.renderErrors() }
+                                    </ul>
+                                    </div>
+                                </div>
+                            ) : ("") }
+
+                    <form onSubmit={event => {event.preventDefault(); this.handleSubmit(context.user.authdata); }}>
                         <div className="grid-66">
                             <div className="course--header">
                                 <h4 className="course--label">Course</h4>

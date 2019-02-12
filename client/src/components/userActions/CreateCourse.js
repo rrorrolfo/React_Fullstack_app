@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Consumer } from "../Context/index";
+import ErrorElement from "../UIElements/ErrorElement"
 
 class CreateCourse extends Component {
+
+    state = {
+        errors: []
+    }
     
     // Input references
     titleRef = React.createRef();
@@ -30,10 +35,22 @@ class CreateCourse extends Component {
             materialsNeeded:this.materialsNeededRef.current.value
         },
         requestOptions)
-        .then( response => { console.log(response); this.props.history.push("/"); })
-        .catch(error => console.log("Error fetching and parsing data", error));
+        .then( response => { if ( response.status === 201) {this.props.history.push("/")} })
+        .catch(error => { console.error(error); this.setState({ errors: error.response.data.errors })});
 
     }
+
+    // Function tha renders errors if  present
+
+    renderErrors = () => { 
+        const errorsToDisplay = [];
+        for (let i = 0; i < this.state.errors.length; i += 1) {
+                            
+            errorsToDisplay.push(<ErrorElement errorMessage={this.state.errors[i]} key={i + 1} />)
+            }
+            
+            return errorsToDisplay
+        }
 
     render() {
         return(
@@ -42,15 +59,19 @@ class CreateCourse extends Component {
                     <div className="bounds course--detail">
                     <h1>Create Course</h1>
                     <div>
-                        <div>
-                            <h2 className="validation--errors--label">Validation errors</h2>
-                            <div className="validation-errors">
-                            <ul>
-                                <li>Please provide a value for "Title"</li>
-                                <li>Please provide a value for "Description"</li>
-                            </ul>
-                            </div>
-                        </div>
+
+                        {/* Displays error messages in case they are present*/}
+                        {this.state.errors.length !== 0 ? (
+                                <div>
+                                    <h2 className="validation--errors--label">Validation errors</h2>
+                                    <div className="validation-errors">
+                                    <ul>
+                                        { this.renderErrors() }
+                                    </ul>
+                                    </div>
+                                </div>
+                            ) : ("") }
+
                         <form onSubmit={event => {event.preventDefault(); this.handleSubmit(context.user.authdata)} }>
                             <div className="grid-66">
                             <div className="course--header">
