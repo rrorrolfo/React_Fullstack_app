@@ -7,7 +7,7 @@ import {
   Redirect,
   Switch} from "react-router-dom";
 import { Provider } from "./components/Context/index";
-import { CookiesProvider, withCookies } from 'react-cookie';
+import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
 
 // App components
 import Header from './components/Header';
@@ -20,6 +20,7 @@ import CreateCourse from './components/userActions/CreateCourse';
 import UpdateCourse from './components/userActions/UpdateCourse';
 import NotFound from './components/NotFound';
 import PrivateRoute from "./components/PrivateRoute";
+const cookies = new Cookies();
 
 
 class App extends Component {
@@ -30,9 +31,10 @@ class App extends Component {
       isUserAuthenticated: false
   }
 
+
   componentDidMount() {
     if (this.props.cookies) {
-      const loggedInUser = JSON.parse(this.props.cookies.cookies.userCookie);
+      const loggedInUser = cookies.get("userCookie");
       this.setState({
         loggedUser: loggedInUser
       });
@@ -91,7 +93,7 @@ class App extends Component {
                 // to keep user logged in between page refreshes
                 user.authdata = B64user;
                 // Set found user into a cookie
-                this.props.cookies.set("userCookie", user)
+                this.props.cookies.set("userCookie", user, {path: "/"})
                 // Update loggedUser in state to the loggedin user
                 this.setState({
                   loggedUser: user
@@ -105,7 +107,7 @@ class App extends Component {
 
 // Method that logsOut a loggedin user 
 logOut = () => {
-  this.props.cookies.remove("userCookie");
+  cookies.remove("userCookie");
   this.setState({
     loggedUser: null
   })
