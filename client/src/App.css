@@ -242,11 +242,19 @@ body {
 .header nav {
   float: right;
   margin-top: 3px;
+  justify-content: space-evenly;
+  width: 20%
 }
 /* line 37, ../sass/global.sass */
 .header nav a {
   color: rgba(255, 255, 255, 0.5);
   margin-left: 20px;
+}
+
+.header nav h5 {
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 20px;
+  font-size: 1.1rem;
 }
 /* line 40, ../sass/global.sass */
 .header nav a:hover {
