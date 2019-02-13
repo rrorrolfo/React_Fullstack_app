@@ -36,7 +36,7 @@ class CreateCourse extends Component {
         },
         requestOptions)
         .then( response => { if ( response.status === 201) {this.props.history.push("/")} })
-        .catch(error => { console.error(error); this.setState({ errors: error.response.data.errors })});
+        .catch(error => this.props.history.push("/error"));
 
     }
 
