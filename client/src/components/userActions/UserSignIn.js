@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Link, Redirect, withRouter } from "react-router-dom";
 import { Consumer } from "../Context/index";
 import ErrorElement from "../UIElements/ErrorElement";
-import { Cookies } from "react-cookie";
-const cookies = new Cookies();
+
+// Component that render the form with which a registered user can sign in
 
 class UserSignIn extends Component {
 
@@ -20,19 +20,17 @@ class UserSignIn extends Component {
 
     render() {
 
-        const { from } = this.props.location.state || { from: { pathname: '/'}};
-
-        if(cookies.get("userCookie")){
-            return (
-                <Redirect to={from} />
-            )
-        }
+        // Constant that holds the previous page that the user was visiting which required authentication. Serves to be redirected back to it once the user has logged in succesfully
+        const { from } = this.props.location.state || { from: { pathname: "/" } };
         
+
         return(
         <Consumer>
-            { context => (
-
-                <div className="bounds">
+            { context => (  
+                
+                context.user && context.isAuthenticated ? (<Redirect to={from.pathname} />
+                ) : (
+                <div className="bounds"> 
                 <div className="grid-33 centered signin">
                     <h1>Sign In</h1>
 
@@ -49,7 +47,7 @@ class UserSignIn extends Component {
                             ) : ("") )}
 
                         <div>
-                            <form onSubmit={ event => {event.preventDefault(); context.actions.logIn(this.state.emailAddress, this.state.password);} }>
+                            <form onSubmit={ event => {event.preventDefault(); context.actions.logIn(this.state.emailAddress, this.state.password); } }>
                                 <div>
                                     <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" value={this.state.emailAddress} onChange={ this.handleChange }/>
                                 </div>
@@ -67,7 +65,7 @@ class UserSignIn extends Component {
                         <p>&nbsp;</p>
                         <p>Don't have a user account? <Link to="/signup">Click here</Link> to sign up!</p>
                 </div>
-            </div>
+            </div>)
             )}
         </Consumer>
             

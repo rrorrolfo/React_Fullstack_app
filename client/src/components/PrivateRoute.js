@@ -4,6 +4,7 @@ import {
     Redirect} from "react-router-dom";
 import { Consumer } from "./Context/index";
 
+// This Higher order component (HOC) prevents an unauthenticated user to access routes that require authentication and redirects them to the login component
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
     <Consumer>
@@ -13,7 +14,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
                 context.isAuthenticated ? (
                         <Component {...props} />
                         ) : (
-                        <Redirect to={"/signin"}/> /*{{ pathname: "/login",state: { from: props.location } }}/> */
+                        <Redirect to={{pathname: "/signin", state: { from: props.location}}}/>
                     )
                 }
             />
