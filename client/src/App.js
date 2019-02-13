@@ -20,6 +20,7 @@ import CreateCourse from './components/userActions/CreateCourse';
 import UpdateCourse from './components/userActions/UpdateCourse';
 import NotFound from './components/NotFound';
 import ErrorRoute from "./components/ErrorRoute";
+import Forbidden from "./components/Forbidden";
 import PrivateRoute from "./components/PrivateRoute";
 const cookies = new Cookies();
 
@@ -147,6 +148,7 @@ logOut = () => {
                 <Route path="/signin" render={ () =>  this.state.loggedUser ? <Redirect to="/" /> : <UserSignIn />}/>
                 <Route path="/signup" render={ () => this.state.loggedUser ? <Redirect to="/" /> : <UserSignUp logIn={this.logIn}/> }/>
                 <Route path="/signout" render={ () => <UserSignOut logOut={this.logOut}/> }/>
+                <Route path="/forbidden" component={ Forbidden } />
                 <Route path="/error" component={ ErrorRoute } />
                 <Route path="/notfound" component={ NotFound }/>
                 <Route render={ () => <Redirect to="/notfound"/> }/>

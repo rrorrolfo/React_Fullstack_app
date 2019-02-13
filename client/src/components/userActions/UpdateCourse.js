@@ -84,10 +84,16 @@ class UpdateCourse extends Component {
             },
             requestOptions)
             .then( response => { if ( response.status === 204) {this.props.history.push("/")} })
-            .catch(error => { console.error(error); this.setState({ errors: error.response.data.errors })});
-
-            }
+            .catch(error => { if ( error.response.status === 401 ) {
+                this.props.history.push("/forbidden");
+            } else if( error.response.status === 404) {
+                this.props.history.push("/notfound");
+              } else {
+                this.props.history.push("/error");
+                  }
+            });
         }
+    }
 
     // Method that renders errors if  present
     renderErrors = () => { 
