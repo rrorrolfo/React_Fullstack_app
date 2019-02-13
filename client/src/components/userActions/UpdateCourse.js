@@ -43,7 +43,13 @@ class UpdateCourse extends Component {
             }
              
         })
-         .catch(error => {console.error("Error fetching and parsing data", error); this.props.history.push("/notfound")});
+        .catch(error => { if( error.response.status === 404) {
+            this.props.history.push("/notfound");
+            } else {
+            this.props.history.push("/error");
+              }
+            }
+        );
     }
 
     handleSubmit = userToAuthenticate => {

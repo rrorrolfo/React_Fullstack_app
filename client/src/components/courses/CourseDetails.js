@@ -19,16 +19,22 @@ class CourseDetails extends Component {
   componentDidMount() {
 
     // Makes get request to get the selected course
-      const courseToDisplay = this.props.match.params.id;
+    const courseToDisplay = this.props.match.params.id;
 
-        // Fetches course details from DB
-        axios.get(`http://localhost:5000/api/courses/${courseToDisplay}`)
-        .then(response => {
-          if ( response.status === 200) {
-            this.setState( {course: response.data, courseOwner: response.data.user} )
+      // Fetches course details from DB
+      axios.get(`http://localhost:5000/api/courses/${courseToDisplay}`)
+      .then(response => {
+        if ( response.status === 200) {
+          this.setState( {course: response.data, courseOwner: response.data.user} )
           } 
         })   
-        .catch(error => {console.error("Error fetching and parsing data", error); this.props.history.push("/notfound")} );
+      .catch( error => { if( error.response.status === 404) {
+        this.props.history.push("/notfound");
+      } else {
+        this.props.history.push("/error");
+          }
+        } 
+      );
 
   }
 
