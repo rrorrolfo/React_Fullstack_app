@@ -60,6 +60,7 @@ class CourseDetails extends Component {
   render() {
 
   const fetchedCourse = this.state.course;
+  const {courseOwner} = this.state;
 
   return(
     <Consumer>
@@ -93,7 +94,7 @@ class CourseDetails extends Component {
           <div className="course--header">
             <h4 className="course--label">Course</h4>
             <h3 className="course--title">{ fetchedCourse.title }</h3>
-            <p>By { this.state.courseOwner ? (`${this.state.courseOwner.firstName} ${this.state.courseOwner.lastName}`) : ("") }</p>
+            <p>By { courseOwner ? (`${courseOwner.firstName} ${courseOwner.lastName}`) : ("") }</p>
           </div>
           <div className="course--description">
             <ReactMarkdown source={ fetchedCourse.description }/>

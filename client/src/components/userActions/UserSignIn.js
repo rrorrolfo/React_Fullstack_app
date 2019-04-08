@@ -22,6 +22,7 @@ class UserSignIn extends Component {
 
         // Constant that holds the previous page that the user was visiting which required authentication. Serves to be redirected back to it once the user has logged in succesfully
         const { from } = this.props.location.state || { from: { pathname: "/" } };
+        const {emailAddress, password} = this.state;
         
 
         return(
@@ -47,12 +48,12 @@ class UserSignIn extends Component {
                             ) : ("") )}
 
                         <div>
-                            <form onSubmit={ event => {event.preventDefault(); context.actions.logIn(this.state.emailAddress, this.state.password); } }>
+                            <form onSubmit={ event => {event.preventDefault(); context.actions.logIn(emailAddress, password); } }>
                                 <div>
-                                    <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" value={this.state.emailAddress} onChange={ this.handleChange }/>
+                                    <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" value={emailAddress} onChange={ this.handleChange }/>
                                 </div>
                                 <div>
-                                    <input id="password" name="password" type="password" className="" placeholder="Password" value={this.state.password} onChange={ this.handleChange }/>
+                                    <input id="password" name="password" type="password" className="" placeholder="Password" value={password} onChange={ this.handleChange }/>
                                 </div>
                                 <div className="grid-100 pad-bottom">
                                     <button className="button" type="submit">Sign In</button>

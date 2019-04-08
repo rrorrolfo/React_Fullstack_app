@@ -27,18 +27,22 @@ class UpdateCourse extends Component {
     componentDidMount() {
 
         const courseToDisplay = this.props.match.params.id;
+        
 
          // Fetches course details from DB
          axios.get(`http://localhost:5000/api/courses/${courseToDisplay}`)
          .then(response => {
             if ( response.status === 200) {
+
+                const {title, description, estimatedTime, materialsNeeded, user, _id} = response.data;
+
                 this.setState( {
-                    title: response.data.title,
-                    description: response.data.description,
-                    estimatedTime: response.data.estimatedTime,
-                    materialsNeeded: response.data.materialsNeeded,
-                    user: response.data.user,
-                    courseID: response.data._id
+                    title: title,
+                    description: description,
+                    estimatedTime: estimatedTime,
+                    materialsNeeded: materialsNeeded,
+                    user: user,
+                    courseID: _id
                 })
             }
              
